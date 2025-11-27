@@ -40,17 +40,8 @@ public class HelperUser extends HelperBase {
 
     }
 
-    public void fillRegistrationForm(User user) {
-        type(By.name("email"), user.getEmail());
-        type(By.xpath("//input[@placeholder='Password']"), user.getPassword());
-    }
-
     public void submitLogin() {
         click(By.xpath("//button[text()='Login']"));
-    }
-
-    public void submitRegistration() {
-        click(By.xpath("//button[text()='Registration']"));
     }
 
     public boolean isLogged() {
@@ -73,5 +64,22 @@ public class HelperUser extends HelperBase {
         return false;
     }
 
+    //***************************Registration***************************
 
+    public void submitRegistration() {
+        click(By.xpath("//button[text()='Registration']"));
+    }
+
+    public void fillRegistrationForm(User user) {
+        type(By.name("email"), user.getEmail());
+        type(By.xpath("//input[@placeholder='Password']"), user.getPassword());
+    }
+
+
+    public boolean isNoContactsHereDisplayed() {
+        WebDriverWait wait = new WebDriverWait(wd,Duration.ofSeconds(5));
+        boolean res =  wait.until(ExpectedConditions.textToBePresentInElement(wd.findElement(By.cssSelector(".contact-page_message__2qafk>h1")),
+                "No Contacts here!"));
+        return res;
+    }
 }
