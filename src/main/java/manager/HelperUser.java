@@ -82,4 +82,12 @@ public class HelperUser extends HelperBase {
                 "No Contacts here!"));
         return res;
     }
+
+    public void login(String email, String password) {
+        openLoginRegistrationForm();
+        fillLoginForm(email, password);
+        submitLogin();
+
+    }
+
 }
