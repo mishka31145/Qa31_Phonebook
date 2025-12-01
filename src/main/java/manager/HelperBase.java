@@ -1,9 +1,10 @@
 package manager;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.google.common.io.Files;
+import org.openqa.selenium.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class HelperBase {
@@ -20,9 +21,15 @@ public class HelperBase {
         WebElement element = wd.findElement(locator);
             element.click();
             element.clear();
+            clearNew(element);
         if(text!=null) {
             element.sendKeys(text);
         }
+    }
+
+    public void clearNew(WebElement element) {
+        element.sendKeys(" ");
+        element.sendKeys(Keys.BACK_SPACE);
     }
 
     public void pause(int time) {
@@ -42,5 +49,18 @@ public class HelperBase {
         List<WebElement>list = wd.findElements(locator);
         return list.size()>0;
     }
+
+    public void getScreen(String link) {
+        TakesScreenshot takesScreenshot = (TakesScreenshot) wd;
+        File temp = takesScreenshot.getScreenshotAs(OutputType.FILE);
+        try {
+            Files.copy(temp, new File(link));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 
 }

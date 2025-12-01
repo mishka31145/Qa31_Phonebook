@@ -83,9 +83,9 @@ public class HelperUser extends HelperBase {
         return res;
     }
 
-    public void login(String email, String password) {
+    public void login(User user) {
         openLoginRegistrationForm();
-        fillLoginForm(email, password);
+        fillLoginForm(user.getEmail(), user.getPassword());
         submitLogin();
 
     }

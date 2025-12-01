@@ -3,6 +3,9 @@ package manager;
 import models.Contact;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 public class HelperContact extends HelperBase{
 
@@ -15,7 +18,7 @@ public class HelperContact extends HelperBase{
         click(By.cssSelector("a[href='/add']"));
     }
 
-    public void fillAddForm(Contact contact) {
+    public void fillAddContactForm(Contact contact) {
         type(By.cssSelector("[placeholder='Name']"), contact.getName());
         type(By.cssSelector("[placeholder='Last Name']"), contact.getLastName());
         type(By.cssSelector("[placeholder='Phone']"), contact.getPhone());
@@ -25,6 +28,43 @@ public class HelperContact extends HelperBase{
     }
 
     public void submitSave() {
-        click(By.xpath("//*[text()='Save']"));
+        click(By.cssSelector(".add_form__2rsm2>button"));
+    }
+
+    public boolean isContactAddedByName(String name) {
+        List<WebElement> list = wd.findElements(By.cssSelector("h2"));
+        for(WebElement element:list) {
+            if(element.getText().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isContactAddedByPhone(String phone) {
+        List<WebElement> list = wd.findElements(By.cssSelector("h3"));
+        for(WebElement element:list) {
+            if(element.getText().equals(phone)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAddNewContactPageStillDisplayed() {
+        return isElementPresent(By.cssSelector("a.active[href='/add']"));
+    }
+
+
+    public void openContactsForm() {
+        click(By.xpath("//a[text()='CONTACTS']"));
+    }
+
+    public void openFirstContactCard() {
+        click(By.cssSelector(".contact-item_card__2SOIM:first-of-type"));
+    }
+
+    public void clickRemoveButton() {
+        click(By.xpath("//button[text()='Remove']"));
     }
 }
