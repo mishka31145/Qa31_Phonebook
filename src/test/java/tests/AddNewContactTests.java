@@ -1,5 +1,7 @@
 package tests;
 
+import manager.DataProviderContacts;
+import manager.DataProviderUser;
 import models.Contact;
 import models.User;
 import org.testng.Assert;
@@ -8,53 +10,63 @@ import org.testng.annotations.Test;
 
 import java.util.Random;
 
-public class AddNewContactTests extends TestBase{
+public class AddNewContactTests extends TestBase {
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void preCondition() {
-        if(!app.getHelperUser().isLogged())
-            app.getHelperUser().login(new User().setEmail("mikh.panfilovv@gmail.com").setPassword("Mixan31145$"));
+        if (!app.getHelperUser().isLogged()) {
+            app.getHelperUser().login(new User().withEmail("margo@gmail.com")
+                    .withPassword("Mmar123456$"));
+        }
     }
 
-    @Test
-    public void addContactSuccessAllFields() {
-        int i = new Random().nextInt(1000)+1000;
+    @Test(dataProvider = "contactSuccess", dataProviderClass = DataProviderContacts.class)
 
-        Contact contact = Contact.builder()
-                        .name("Sam"+i)
-                        .lastName("Norm")
-                        .phone("05365327"+i)
-                        .email("uytb"+i+"@gmail.com")
-                        .address("Haifa,Israel")
-                        .description("all fields")
-                        .build();
+    public void addContactSuccessAllFields(Contact contact) {
+        int i = new Random().nextInt(1000) + 1000;
 
-        app.getHelperContact().openAddForm();
-        app.getHelperContact().fillAddContactForm(contact);
-       // app.getHelperContact().pause(15000);
-        app.getHelperContact().getScreen("src/test/screenshots/screen-"+i+".png");
-        app.getHelperContact().submitSave();
-
+        app.getHelperContact().openContactForm();
+        app.getHelperContact().fillContactForm(contact);
+        //app.getHelperContact().pause(15000);
+        app.getHelperContact().getScreen("src/test/screenshots/screen-" + i + ".png");
+        app.getHelperContact().saveContact();
         Assert.assertTrue(app.getHelperContact().isContactAddedByName(contact.getName()));
         Assert.assertTrue(app.getHelperContact().isContactAddedByPhone(contact.getPhone()));
+
     }
 
-    @Test
-    public void addContactSuccessRequiredFields() {
-        int i = new Random().nextInt(1000)+1000;
+    //for jenkins!!!
+
+    @Test(dataProvider = "contactCSV", dataProviderClass = DataProviderContacts.class)
+    public void addContactSuccessAllFieldsCSV(Contact contact) {
+        int i = new Random().nextInt(1000) + 1000;
+
+        app.getHelperContact().openContactForm();
+        app.getHelperContact().fillContactForm(contact);
+        //app.getHelperContact().pause(15000);
+        app.getHelperContact().getScreen("src/test/screenshots/screen-" + i + ".png");
+        app.getHelperContact().saveContact();
+        Assert.assertTrue(app.getHelperContact().isContactAddedByName(contact.getName()));
+        Assert.assertTrue(app.getHelperContact().isContactAddedByPhone(contact.getPhone()));
+
+    }
+
+    @Test(groups = {"smoke","regress","retest"})
+    public void addContactSuccessReqFields() {
+        int i = new Random().nextInt(1000) + 1000;
 
         Contact contact = Contact.builder()
-                .name("Sam")
-                .lastName("Norm")
-                .phone("05365327"+i)
-                .email("uytb"+i+"@gmail.com")
-                .address("Haifa,Israel")
+                .name("TonyReq")
+                .lastName("Molly")
+                .email("tony" + i + "@gmail.com")
+                .phone("34343434" + i)
+                .address("Haifa")
                 .build();
 
-        app.getHelperContact().openAddForm();
-        app.getHelperContact().fillAddContactForm(contact);
-       // app.getHelperContact().pause(15000);
-        app.getHelperContact().submitSave();
+        app.getHelperContact().openContactForm();
+        app.getHelperContact().fillContactForm(contact);
+        // app.getHelperContact().pause(15000);
+        app.getHelperContact().saveContact();
 
         Assert.assertTrue(app.getHelperContact().isContactAddedByName(contact.getName()));
         Assert.assertTrue(app.getHelperContact().isContactAddedByPhone(contact.getPhone()));
@@ -62,84 +74,70 @@ public class AddNewContactTests extends TestBase{
 
     @Test
     public void addNewContactWrongName() {
-
         Contact contact = Contact.builder()
                 .name("")
-                .lastName("Norm")
-                .phone("053653274321")
-                .email("uytb@gmail.com")
-                .address("Haifa,Israel")
+                .lastName("Molly")
+                .email("tony@gmail.com")
+                .phone("343434343434")
+                .address("Haifa")
                 .description("wrong name")
                 .build();
 
-        app.getHelperContact().openAddForm();
-        app.getHelperContact().fillAddContactForm(contact);
+        app.getHelperContact().openContactForm();
+        app.getHelperContact().fillContactForm(contact);
         //app.getHelperContact().pause(15000);
-        app.getHelperContact().submitSave();
+        app.getHelperContact().saveContact();
 
         Assert.assertTrue(app.getHelperContact().isAddNewContactPageStillDisplayed());
     }
 
     @Test
     public void addNewContactWrongLastName() {
-
         Contact contact = Contact.builder()
-                .name("Sam")
+                .name("Tony")
                 .lastName("")
-                .phone("053653274321")
-                .email("uytb@gmail.com")
-                .address("Haifa,Israel")
+                .email("tony@gmail.com")
+                .phone("343434343434")
+                .address("Haifa")
                 .description("wrong last name")
                 .build();
 
-        app.getHelperContact().openAddForm();
-        app.getHelperContact().fillAddContactForm(contact);
-       // app.getHelperContact().pause(15000);
-        app.getHelperContact().submitSave();
-
+        app.getHelperContact().openContactForm();
+        app.getHelperContact().fillContactForm(contact);
+        //app.getHelperContact().pause(15000);
+        app.getHelperContact().saveContact();
         Assert.assertTrue(app.getHelperContact().isAddNewContactPageStillDisplayed());
 
     }
 
     @Test
     public void addNewContactWrongEmail() {
-
         Contact contact = Contact.builder()
-                .name("Sam")
-                .lastName("Norm")
-                .phone("053653274321")
-                .email("uytbgmail.com")
-                .address("Haifa,Israel")
+                .name("Tony")
+                .lastName("Molly")
+                .email("tonygmail.com")
+                .phone("343434343434")
+                .address("Haifa")
                 .description("wrong email")
                 .build();
 
-        app.getHelperContact().openAddForm();
-        app.getHelperContact().fillAddContactForm(contact);
-       // app.getHelperContact().pause(15000);
-        app.getHelperContact().submitSave();
-
+        app.getHelperContact().openContactForm();
+        app.getHelperContact().fillContactForm(contact);
+        //app.getHelperContact().pause(15000);
+        app.getHelperContact().saveContact();
         Assert.assertTrue(app.getHelperContact().isAddNewContactPageStillDisplayed());
         Assert.assertTrue(app.getHelperUser().isAlertPresent("Email not valid:"));
 
+
     }
 
-    @Test
-    public void addNewContactWrongPhone() {
+    @Test(dataProvider = "contactWrongPhone",dataProviderClass = DataProviderContacts.class)
+    public void addNewContactWrongPhone(Contact contact) {
 
-        Contact contact = Contact.builder()
-                .name("Sam")
-                .lastName("Norm")
-                .phone("")
-                .email("uytb@gmail.com")
-                .address("Haifa,Israel")
-                .description("wrong phone")
-                .build();
-
-        app.getHelperContact().openAddForm();
-        app.getHelperContact().fillAddContactForm(contact);
-        //app.getHelperContact().pause(15000);
-        app.getHelperContact().submitSave();
-
+        app.getHelperContact().openContactForm();
+        app.getHelperContact().fillContactForm(contact);
+        // app.getHelperContact().pause(15000);
+        app.getHelperContact().saveContact();
         Assert.assertTrue(app.getHelperContact().isAddNewContactPageStillDisplayed());
         Assert.assertTrue(app.getHelperUser().isAlertPresent(" Phone not valid: Phone number must contain only digits! And length min 10, max 15!"));
 
@@ -147,23 +145,20 @@ public class AddNewContactTests extends TestBase{
 
     @Test
     public void addNewContactWrongAddress() {
-
         Contact contact = Contact.builder()
-                .name("Sam")
-                .lastName("Norm")
-                .phone("053653274321")
-                .email("uytb@gmail.com")
+                .name("Tony")
+                .lastName("Molly")
+                .email("tony@gmail.com")
+                .phone("343434343434")
                 .address("")
                 .description("wrong address")
                 .build();
 
-        app.getHelperContact().openAddForm();
-        app.getHelperContact().fillAddContactForm(contact);
-       // app.getHelperContact().pause(15000);
-        app.getHelperContact().submitSave();
-
+        app.getHelperContact().openContactForm();
+        app.getHelperContact().fillContactForm(contact);
+        //app.getHelperContact().pause(15000);
+        app.getHelperContact().saveContact();
         Assert.assertTrue(app.getHelperContact().isAddNewContactPageStillDisplayed());
-
 
     }
 

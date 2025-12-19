@@ -1,39 +1,33 @@
 package tests;
 
 import models.User;
-import org.openqa.selenium.By;
-import org.testng.annotations.BeforeClass;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class RemoveContactTests extends TestBase{
+public class RemoveContactTests extends TestBase {
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void preCondition() {
-        if(!app.getHelperUser().isLogged()) {
-            app.getHelperUser().login(new User().setEmail("mikh.panfilovv@gmail.com").setPassword("Mixan31145$"));
+        if (!app.getHelperUser().isLogged()) {
+            app.getHelperUser().login(new User().withEmail("margo@gmail.com")
+                    .withPassword("Mmar123456$"));
         }
 
-       // app.getHelperContact().provideContact(); //if contact list size<3 ==> add 3 contacts
+        app.getHelperContact().provideContact();//if contact list size <3 ==> add 3 contacts
     }
 
-    @Test
+
+    @Test(groups = {"smoke"})
     public void removeFirstContact() {
-        //Assert --> size contact list-1
-        app.getHelperContact().openContactsForm();
-        app.getHelperContact().openFirstContactCard();
-        app.getHelperContact().clickRemoveButton();
+        //Assert -->size contact list less by one
+        Assert.assertEquals(app.getHelperContact().removeOneContact(),1);
     }
 
     @Test
     public void removeAllContacts() {
-        //Assert --> "No contacts here!"
-        app.getHelperContact().openContactsForm();
-        while (app.getHelperContact().isElementPresent(By.cssSelector(".contact-item_card__2SOIM:first-of-type"))) {
-            app.getHelperContact().openFirstContactCard();
-            app.getHelperContact().clickRemoveButton();
-        }
-
+        app.getHelperContact().removeAllContacts();
+        //Assert --> "No Contacts here!"
+        Assert.assertTrue(app.getHelperContact().isNoContactsHereDisplayed());
     }
-
 }

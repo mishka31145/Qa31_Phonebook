@@ -1,0 +1,11 @@
+11:16:22.942 INFO  manager.TestNGListener - Start tests on date -->Fri Dec 12 11:16:22 IST 2025========
+11:16:22.977 INFO  manager.TestNGListener - Start test -->loginWrongEmail========
+11:16:22.979 INFO  tests.TestBase - Test data ---> email: 'margogmail.com' & password: 'Mmar123456$'
+11:16:22.982 INFO  manager.TestNGListener - Failure test -->loginWrongEmail========
+11:16:22.987 INFO  manager.TestNGListener - Start test -->registrationWrongEmail========
+11:16:22.988 INFO  manager.TestNGListener - Failure test -->registrationWrongEmail========
+11:16:22.989 INFO  manager.TestNGListener - Start test -->addContactSuccessReqFields========
+11:16:22.993 INFO  manager.TestNGListener - Failure test -->addContactSuccessReqFields========
+11:16:22.996 INFO  manager.TestNGListener - Start test -->removeFirstContact========
+11:16:22.997 INFO  manager.TestNGListener - Failure test -->removeFirstContact========
+11:16:22.997 INFO  manager.TestNGListener - Stop testsing on date -->Fri Dec 12 11:16:22 IST 2025========
